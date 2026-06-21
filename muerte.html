@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#e74c3c">
+<title>Muerte / Baja – Granja Tarapoto</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-header" style="background:#c0392b;">
+  <button class="back-btn" onclick="history.back()">&#8592;</button>
+  <h1>💀 Muerte / Baja</h1>
+</div>
+
+<div class="container">
+  <div class="fecha-badge" id="badge-fecha"></div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:33%;background:#e74c3c;"></div></div>
+  <div class="step-label" id="step-label">Paso 1 de 3</div>
+
+  <div id="form-body">
+
+    <!-- PASO 1: ¿Qué animal? -->
+    <div class="step active" id="paso-1">
+      <div class="step-title">¿Qué animal murió?</div>
+
+      <p style="font-size:.88rem;color:#555;margin-bottom:12px;">Selecciona la categoría:</p>
+      <div class="opciones-grid" id="categoria-grid">
+        <button class="opcion-btn" data-val="Engorde" onclick="seleccionarCategoria(this)">🐷 Engorde</button>
+        <button class="opcion-btn" data-val="Recría" onclick="seleccionarCategoria(this)">🐽 Recría</button>
+        <button class="opcion-btn" data-val="Lechón maternidad" onclick="seleccionarCategoria(this)">🍼 Lechón Mat.</button>
+        <button class="opcion-btn" data-val="Marrana" onclick="seleccionarCategoria(this)">🐄 Marrana</button>
+      </div>
+
+      <div class="field-group" style="margin-top:8px;">
+        <div class="field-row field-wide">
+          <label>Identificación (opcional)</label>
+          <input type="text" id="animal_id" style="width:100%;text-align:left;" placeholder="Ej: Poza 4 / Jaula 2 / Ma-008">
+        </div>
+      </div>
+
+      <input type="hidden" id="categoria">
+      <div class="nav-btns">
+        <button class="btn btn-rojo" onclick="pasoCausa()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PASO 2: Causa -->
+    <div class="step" id="paso-2">
+      <div class="step-title">¿Cuál fue la causa?</div>
+
+      <div class="opciones-grid">
+        <button class="opcion-btn" data-val="Aplastado" onclick="seleccionarCausa(this)">💢 Aplastado</button>
+        <button class="opcion-btn" data-val="Enfermedad" onclick="seleccionarCausa(this)">🤒 Enfermedad</button>
+        <button class="opcion-btn" data-val="Débil/Retrasado" onclick="seleccionarCausa(this)">⚠️ Débil</button>
+        <button class="opcion-btn" data-val="Otra" onclick="seleccionarCausa(this)">❓ Otra</button>
+      </div>
+
+      <div class="field-group" style="margin-top:8px;">
+        <div class="field-row field-wide">
+          <label>Detalle (opcional)</label>
+          <textarea id="detalle_causa" rows="2" placeholder="Más detalles sobre la causa..."></textarea>
+        </div>
+        <div class="field-row">
+          <label>Peso estimado (kg)</label>
+          <input type="number" id="peso_estimado" min="0" max="300" step="0.5" placeholder="—">
+        </div>
+      </div>
+
+      <input type="hidden" id="causa">
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn btn-rojo" onclick="irAConfirmar()">Revisar →</button>
+      </div>
+    </div>
+
+    <!-- PASO 3: Confirmación -->
+    <div class="step" id="paso-3">
+      <div class="step-title">✅ Confirmar Baja</div>
+      <div class="confirm-box">
+        <div class="confirm-row"><span class="key">Categoría</span><span class="val" id="r-cat"></span></div>
+        <div class="confirm-row"><span class="key">Identificación</span><span class="val" id="r-id"></span></div>
+        <div class="confirm-row"><span class="key">Causa</span><span class="val" id="r-causa"></span></div>
+        <div class="confirm-row"><span class="key">Detalle</span><span class="val" id="r-detalle"></span></div>
+        <div class="confirm-row"><span class="key">Peso estimado</span><span class="val" id="r-peso"></span></div>
+        <div class="confirm-row"><span class="key">Fecha</span><span class="val" id="r-fecha"></span></div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Corregir</button>
+        <button class="btn btn-rojo" id="btn-enviar" onclick="enviar()">Registrar ✓</button>
+      </div>
+      <div class="spinner" id="spinner">Enviando...</div>
+      <div class="msg-error" id="msg-error"><p></p>
+        <button class="btn btn-primario" style="margin-top:12px" onclick="this.parentElement.style.display='none'">Reintentar</button>
+      </div>
+    </div>
+
+  </div><!-- /form-body -->
+
+  <div class="msg-exito" id="msg-exito">
+    <div class="icono-msg">📋</div>
+    <p>¡Baja registrada!</p>
+    <button class="btn btn-rojo" style="margin-top:20px" onclick="window.location='index.html'">Volver al menú</button>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
+const nav = initPasos(3);
+
+function seleccionarCategoria(btn) {
+  document.querySelectorAll('#categoria-grid .opcion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('categoria').value = btn.dataset.val;
+}
+
+function seleccionarCausa(btn) {
+  btn.closest('.opciones-grid').querySelectorAll('.opcion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('causa').value = btn.dataset.val;
+}
+
+function pasoCausa() {
+  if (!document.getElementById('categoria').value) {
+    alert('Por favor selecciona una categoría.');
+    return;
+  }
+  nav.siguiente();
+}
+
+function irAConfirmar() {
+  if (!document.getElementById('causa').value) {
+    alert('Por favor selecciona una causa.');
+    return;
+  }
+  document.getElementById('r-cat').textContent    = document.getElementById('categoria').value;
+  document.getElementById('r-id').textContent     = document.getElementById('animal_id')?.value || '—';
+  document.getElementById('r-causa').textContent  = document.getElementById('causa').value;
+  document.getElementById('r-detalle').textContent= document.getElementById('detalle_causa')?.value || '—';
+  const peso = document.getElementById('peso_estimado')?.value;
+  document.getElementById('r-peso').textContent   = peso ? peso + ' kg' : '—';
+  document.getElementById('r-fecha').textContent  = fechaHoy();
+  nav.siguiente();
+}
+
+async function enviar() {
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+  try {
+    await enviarDatos('muerte', {
+      categoria:     document.getElementById('categoria').value,
+      animal_id:     document.getElementById('animal_id')?.value?.trim(),
+      causa:         document.getElementById('causa').value,
+      detalle_causa: document.getElementById('detalle_causa')?.value?.trim(),
+      peso_estimado: parseFloat(document.getElementById('peso_estimado')?.value) || null,
+    });
+    mostrarExito('form-body', 'msg-exito');
+  } catch(e) {
+    document.getElementById('spinner').style.display = 'none';
+    btn.disabled = false;
+    mostrarError('msg-error', e.message);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#27ae60">
+<title>Nacimiento – Granja Tarapoto</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-header" style="background:#27ae60;">
+  <button class="back-btn" onclick="history.back()">&#8592;</button>
+  <h1>🐣 Registro de Parto</h1>
+</div>
+
+<div class="container">
+  <div class="fecha-badge" id="badge-fecha"></div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:33%;background:#27ae60;"></div></div>
+  <div class="step-label" id="step-label">Paso 1 de 3</div>
+
+  <div id="form-body">
+
+    <!-- PASO 1: Identificación de la marrana -->
+    <div class="step active" id="paso-1">
+      <div class="step-title">¿Cuál marrana parió?</div>
+      <div class="field-group">
+        <div class="field-row field-wide">
+          <label>Número o nombre de la marrana</label>
+          <input type="text" id="marrana_id" placeholder="Ej: Ma-008 / Negrita" style="width:100%;text-align:left;">
+        </div>
+        <div class="field-row">
+          <label>¿Qué número de parto es?</label>
+          <input type="number" id="num_parto" min="1" max="20" placeholder="1">
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-verde" onclick="nav.siguiente()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PASO 2: Conteo de lechones -->
+    <div class="step" id="paso-2">
+      <div class="step-title">Conteo de Lechones</div>
+      <div class="field-group">
+        <div class="field-row">
+          <label>Nacidos <strong>vivos</strong></label>
+          <input type="number" id="nacidos_vivos" min="0" max="30" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Nacidos <strong>muertos</strong></label>
+          <input type="number" id="nacidos_muertos" min="0" max="30" placeholder="0">
+        </div>
+      </div>
+      <div class="field-group" style="padding:12px 16px; background:#f0fff4; margin-top:0;">
+        <strong>Total nacidos: <span id="total-nacidos">0</span></strong>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn btn-verde" onclick="irAConfirmar()">Revisar →</button>
+      </div>
+    </div>
+
+    <!-- PASO 3: Confirmación -->
+    <div class="step" id="paso-3">
+      <div class="step-title">✅ Confirmar Parto</div>
+      <div class="confirm-box">
+        <div class="confirm-row"><span class="key">Marrana</span><span class="val" id="r-marrana"></span></div>
+        <div class="confirm-row"><span class="key">Nº de parto</span><span class="val" id="r-parto"></span></div>
+        <div class="confirm-row"><span class="key">Nacidos vivos</span><span class="val" id="r-vivos" style="color:#27ae60;"></span></div>
+        <div class="confirm-row"><span class="key">Nacidos muertos</span><span class="val" id="r-muertos" style="color:#e74c3c;"></span></div>
+        <div class="confirm-row"><span class="key">Fecha</span><span class="val" id="r-fecha"></span></div>
+      </div>
+      <div class="field-group">
+        <div class="field-row field-wide">
+          <label>Observaciones (opcional)</label>
+          <textarea id="notas" rows="3" placeholder="Ej: Parto difícil, marrana en observación..."></textarea>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Corregir</button>
+        <button class="btn btn-verde" id="btn-enviar" onclick="enviar()">Registrar ✓</button>
+      </div>
+      <div class="spinner" id="spinner">Enviando...</div>
+      <div class="msg-error" id="msg-error"><p></p>
+        <button class="btn btn-primario" style="margin-top:12px" onclick="this.parentElement.style.display='none'">Reintentar</button>
+      </div>
+    </div>
+
+  </div><!-- /form-body -->
+
+  <div class="msg-exito" id="msg-exito">
+    <div class="icono-msg">🐣</div>
+    <p>¡Parto registrado!</p>
+    <button class="btn btn-verde" style="margin-top:20px" onclick="window.location='index.html'">Volver al menú</button>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
+const nav = initPasos(3);
+
+['nacidos_vivos','nacidos_muertos'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    const v = (parseInt(document.getElementById('nacidos_vivos')?.value)||0)
+            + (parseInt(document.getElementById('nacidos_muertos')?.value)||0);
+    document.getElementById('total-nacidos').textContent = v;
+  });
+});
+
+function irAConfirmar() {
+  document.getElementById('r-marrana').textContent = document.getElementById('marrana_id')?.value || '—';
+  document.getElementById('r-parto').textContent   = document.getElementById('num_parto')?.value || '—';
+  document.getElementById('r-vivos').textContent   = document.getElementById('nacidos_vivos')?.value || '0';
+  document.getElementById('r-muertos').textContent = document.getElementById('nacidos_muertos')?.value || '0';
+  document.getElementById('r-fecha').textContent   = fechaHoy();
+  nav.siguiente();
+}
+
+async function enviar() {
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  document.getElementById('spinner').style.display = 'block';
+  try {
+    await enviarDatos('nacimiento', {
+      marrana_id:     document.getElementById('marrana_id')?.value?.trim(),
+      num_parto:      parseInt(document.getElementById('num_parto')?.value) || null,
+      nacidos_vivos:  parseInt(document.getElementById('nacidos_vivos')?.value) || 0,
+      nacidos_muertos:parseInt(document.getElementById('nacidos_muertos')?.value) || 0,
+      notas:          document.getElementById('notas')?.value?.trim(),
+    });
+    mostrarExito('form-body', 'msg-exito');
+  } catch(e) {
+    document.getElementById('spinner').style.display = 'none';
+    btn.disabled = false;
+    mostrarError('msg-error', e.message);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,353 @@
+/* ── Reset y base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --azul:    #1F4E79;
+  --azul-cl: #2E86AB;
+  --verde:   #27ae60;
+  --rojo:    #e74c3c;
+  --gris:    #f0f4f8;
+  --borde:   #d0d7de;
+  --texto:   #1a1a2e;
+  --radio:   12px;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--gris);
+  color: var(--texto);
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Header ── */
+.app-header {
+  background: var(--azul);
+  color: #fff;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.app-header .back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 6px;
+}
+.app-header h1 { font-size: 1.1rem; }
+
+/* ── Contenedor principal ── */
+.container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* ── Menú principal (index) ── */
+.menu-header {
+  text-align: center;
+  padding: 32px 16px 24px;
+  background: var(--azul);
+  color: #fff;
+}
+.menu-header .icono { font-size: 3rem; margin-bottom: 8px; }
+.menu-header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+.menu-header p { font-size: .85rem; opacity: .8; }
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 24px 16px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.menu-btn {
+  background: #fff;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 24px 12px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--texto);
+  cursor: pointer;
+  transition: border-color .2s, transform .1s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px #0001;
+}
+.menu-btn:active { transform: scale(.97); }
+.menu-btn .icono-btn { font-size: 2.4rem; }
+.menu-btn .label-btn { font-size: .95rem; font-weight: 600; }
+.menu-btn.semanal { border-color: var(--azul); }
+.menu-btn.nacimiento { border-color: var(--verde); }
+.menu-btn.muerte { border-color: var(--rojo); }
+.menu-btn.venta { border-color: #f39c12; }
+
+/* ── Barra de progreso (formularios multipaso) ── */
+.progress-bar {
+  height: 5px;
+  background: #e0e7ef;
+  border-radius: 3px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--azul-cl);
+  border-radius: 3px;
+  transition: width .3s;
+}
+.step-label {
+  font-size: .78rem;
+  color: #666;
+  text-align: right;
+  margin-top: -20px;
+  margin-bottom: 20px;
+}
+
+/* ── Pasos del formulario ── */
+.step { display: none; }
+.step.active { display: block; }
+
+.step-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #dde5ef;
+}
+
+/* ── Grupos de campos ── */
+.field-group {
+  background: #fff;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.field-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 12px;
+}
+.field-row:last-child { border-bottom: none; }
+.field-row label {
+  flex: 1;
+  font-size: .92rem;
+  font-weight: 500;
+}
+.field-row .tag {
+  font-size: .72rem;
+  background: #e8f0fe;
+  color: var(--azul);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+.field-row input[type="number"],
+.field-row input[type="text"],
+.field-row select,
+.field-row textarea {
+  width: 90px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--borde);
+  border-radius: 8px;
+  font-size: 1.1rem;
+  text-align: center;
+  font-family: inherit;
+  background: #fafbfc;
+  transition: border-color .2s;
+}
+.field-row input:focus,
+.field-row select:focus,
+.field-row textarea:focus {
+  outline: none;
+  border-color: var(--azul-cl);
+  background: #fff;
+}
+
+/* Campos de texto ancho (notas, causas) */
+.field-wide input,
+.field-wide select,
+.field-wide textarea {
+  width: 100%;
+  text-align: left;
+}
+.field-wide {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.field-wide label { font-size: .92rem; font-weight: 500; }
+.field-wide textarea {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  padding: 10px;
+  font-size: .95rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--borde);
+  font-family: inherit;
+}
+
+/* ── Selector de opciones (causa de muerte, etc.) ── */
+.opciones-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.opcion-btn {
+  padding: 14px 10px;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio);
+  background: #fff;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color .2s, background .2s;
+}
+.opcion-btn.selected {
+  border-color: var(--azul);
+  background: #e8f4ff;
+  color: var(--azul);
+}
+
+/* ── Cálculo de venta ── */
+.resultado-venta {
+  background: #e8f5e9;
+  border: 2px solid var(--verde);
+  border-radius: var(--radio);
+  padding: 16px;
+  margin-top: 8px;
+  text-align: center;
+}
+.resultado-venta .monto {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1b5e20;
+}
+.resultado-venta .detalle {
+  font-size: .82rem;
+  color: #388e3c;
+  margin-top: 4px;
+}
+
+/* ── Botones de navegación ── */
+.nav-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+.btn {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radio);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s, transform .1s;
+  font-family: inherit;
+}
+.btn:active { transform: scale(.98); opacity: .85; }
+.btn-secundario {
+  background: #e0e7ef;
+  color: #555;
+}
+.btn-primario {
+  background: var(--azul);
+  color: #fff;
+}
+.btn-verde {
+  background: var(--verde);
+  color: #fff;
+}
+.btn-rojo {
+  background: var(--rojo);
+  color: #fff;
+}
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ── Pantalla de confirmación ── */
+.confirm-box {
+  background: #fff;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.confirm-box h3 {
+  font-size: .9rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: 12px;
+}
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: .9rem;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-row .key { color: #555; }
+.confirm-row .val { font-weight: 600; }
+
+/* ── Éxito / Error ── */
+.msg-exito, .msg-error {
+  display: none;
+  text-align: center;
+  padding: 32px 20px;
+  border-radius: var(--radio);
+  margin-top: 12px;
+}
+.msg-exito {
+  background: #e8f5e9;
+  color: #1b5e20;
+  border: 2px solid var(--verde);
+}
+.msg-exito .icono-msg { font-size: 3rem; margin-bottom: 12px; }
+.msg-exito p { font-size: 1.05rem; font-weight: 600; }
+.msg-error {
+  background: #ffebee;
+  color: #b71c1c;
+  border: 2px solid var(--rojo);
+}
+.msg-error p { font-size: .95rem; }
+
+/* ── Spinner ── */
+.spinner {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  color: #555;
+}
+
+/* ── Resumen de fecha ── */
+.fecha-badge {
+  background: var(--azul);
+  color: #fff;
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: .82rem;
+  display: inline-block;
+  margin-bottom: 20px;
+}

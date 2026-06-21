@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1F4E79">
+<title>Control Semanal – Granja Tarapoto</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-header">
+  <button class="back-btn" onclick="history.back()">&#8592;</button>
+  <h1>📋 Control Semanal</h1>
+</div>
+
+<div class="container">
+  <div class="fecha-badge" id="badge-fecha"></div>
+
+  <!-- Barra de progreso -->
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+  <div class="step-label" id="step-label">Paso 1 de 5</div>
+
+  <!-- FORMULARIO -->
+  <div id="form-body">
+
+    <!-- ── PASO 1: POZAS DE ENGORDE ── -->
+    <div class="step active" id="paso-1">
+      <div class="step-title">🏛 Pozas de Engorde</div>
+      <div class="field-group">
+        <div class="field-row">
+          <label>Poza 1</label>
+          <input type="number" id="poza_1" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 2</label>
+          <input type="number" id="poza_2" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 3</label>
+          <input type="number" id="poza_3" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 4</label>
+          <input type="number" id="poza_4" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 5</label>
+          <input type="number" id="poza_5" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 6</label>
+          <input type="number" id="poza_6" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 11</label>
+          <input type="number" id="poza_11" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Poza 12</label>
+          <input type="number" id="poza_12" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Piso Plástico</label>
+          <input type="number" id="piso_plastico" min="0" max="999" placeholder="0">
+        </div>
+      </div>
+      <div class="field-group" style="padding:12px 16px; background:#f0f7ff;">
+        <strong>Total Engordes: <span id="total-engordes">0</span></strong>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-primario" onclick="nav.siguiente()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ── PASO 2: JAULAS DE RECRÍA ── -->
+    <div class="step" id="paso-2">
+      <div class="step-title">🐾 Jaulas de Recría (Destetados)</div>
+      <div class="field-group">
+        <div class="field-row">
+          <label>Jaula 1</label>
+          <input type="number" id="jaula_1" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 2</label>
+          <input type="number" id="jaula_2" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 3</label>
+          <input type="number" id="jaula_3" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 4</label>
+          <input type="number" id="jaula_4" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 5</label>
+          <input type="number" id="jaula_5" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 6</label>
+          <input type="number" id="jaula_6" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 7</label>
+          <input type="number" id="jaula_7" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Jaula 8</label>
+          <input type="number" id="jaula_8" min="0" max="999" placeholder="0">
+        </div>
+      </div>
+      <div class="field-group" style="padding:12px 16px; background:#f0fff4;">
+        <strong>Total Recría: <span id="total-recria">0</span></strong>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn btn-primario" onclick="nav.siguiente()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ── PASO 3: MARRANAS ── -->
+    <div class="step" id="paso-3">
+      <div class="step-title">🐄 Marranas y Lechones</div>
+      <div class="field-group">
+        <div class="field-row">
+          <label>Total Marranas <span class="tag">sin futuras</span></label>
+          <input type="number" id="marranas_total" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Marranas c/Lechones</label>
+          <input type="number" id="marranas_con_lechones" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Lechones Maternidad</label>
+          <input type="number" id="lechones_maternidad" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Sin clasificar</label>
+          <input type="number" id="marranas_sin_clasificar" min="0" max="999" placeholder="0">
+        </div>
+      </div>
+
+      <div class="step-title" style="margin-top:16px;">🐗 Verracos y Futuras Madres</div>
+      <div class="field-group">
+        <div class="field-row">
+          <label>Total Verracos</label>
+          <input type="number" id="total_verracos" min="0" max="99" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Futuras Madres Granja</label>
+          <input type="number" id="futuras_madres_granja" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Futuras Madres Huaral</label>
+          <input type="number" id="futuras_madres_huaral" min="0" max="999" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Enfermería <span class="tag">lechones</span></label>
+          <input type="number" id="enfermeria" min="0" max="999" placeholder="0">
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn btn-primario" onclick="nav.siguiente()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ── PASO 4: NOTAS ── -->
+    <div class="step" id="paso-4">
+      <div class="step-title">📝 Notas y Ocurrencias</div>
+      <p style="font-size:.88rem;color:#555;margin-bottom:14px;">Anota cualquier evento importante de la semana: muertes, ventas, incidentes, etc.</p>
+      <div class="field-group">
+        <div class="field-row field-wide">
+          <label>Notas (opcional)</label>
+          <textarea id="notas" rows="4" placeholder="Ej: 2 lechones aplastados en Jaula 4. Se vendió 1 engorde..."></textarea>
+        </div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn btn-primario" onclick="irAConfirmar()">Revisar →</button>
+      </div>
+    </div>
+
+    <!-- ── PASO 5: CONFIRMACIÓN ── -->
+    <div class="step" id="paso-5">
+      <div class="step-title">✅ Confirmar y Enviar</div>
+
+      <div class="confirm-box" id="resumen-engordes">
+        <h3>Engordes</h3>
+        <div id="resumen-engordes-rows"></div>
+      </div>
+
+      <div class="confirm-box" id="resumen-recria">
+        <h3>Recría</h3>
+        <div id="resumen-recria-rows"></div>
+      </div>
+
+      <div class="confirm-box" id="resumen-resto">
+        <h3>Marranas / Verracos / Otros</h3>
+        <div id="resumen-resto-rows"></div>
+      </div>
+
+      <div class="confirm-box" id="resumen-notas" style="display:none">
+        <h3>Notas</h3>
+        <p id="resumen-notas-texto" style="font-size:.9rem;"></p>
+      </div>
+
+      <div class="nav-btns">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Corregir</button>
+        <button class="btn btn-verde" id="btn-enviar" onclick="enviar()">Enviar ✓</button>
+      </div>
+
+      <div class="spinner" id="spinner">Enviando...</div>
+      <div class="msg-error" id="msg-error"><p></p>
+        <button class="btn btn-primario" style="margin-top:12px" onclick="this.parentElement.style.display='none'">Reintentar</button>
+      </div>
+    </div>
+
+  </div><!-- /form-body -->
+
+  <!-- ÉXITO -->
+  <div class="msg-exito" id="msg-exito">
+    <div class="icono-msg">✅</div>
+    <p>¡Control semanal registrado!</p>
+    <p style="font-size:.85rem;margin-top:8px;color:#388e3c;" id="msg-fecha-ok"></p>
+    <button class="btn btn-primario" style="margin-top:20px" onclick="window.location='index.html'">Volver al menú</button>
+  </div>
+
+</div><!-- /container -->
+
+<script src="app.js"></script>
+<script>
+document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
+
+const nav = initPasos(5);
+
+// Calcular totales en tiempo real
+function sumarCampos(ids) {
+  return ids.reduce((s, id) => s + (parseInt(document.getElementById(id)?.value) || 0), 0);
+}
+
+const POZAS  = ['poza_1','poza_2','poza_3','poza_4','poza_5','poza_6','poza_11','poza_12','piso_plastico'];
+const JAULAS = ['jaula_1','jaula_2','jaula_3','jaula_4','jaula_5','jaula_6','jaula_7','jaula_8'];
+
+POZAS.forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    document.getElementById('total-engordes').textContent = sumarCampos(POZAS);
+  });
+});
+JAULAS.forEach(id => {
+  document.getElementById(id)?.addEventListener('input', () => {
+    document.getElementById('total-recria').textContent = sumarCampos(JAULAS);
+  });
+});
+
+// Construir resumen antes de ir al paso 5
+function irAConfirmar() {
+  const eng = POZAS.map(id => {
+    const v = document.getElementById(id)?.value;
+    if (!v && v !== '0') return '';
+    const lbl = id.replace('_', ' ').replace('poza', 'Poza').replace('piso plastico', 'Piso Plástico');
+    return `<div class="confirm-row"><span class="key">${lbl}</span><span class="val">${v}</span></div>`;
+  }).join('');
+  document.getElementById('resumen-engordes-rows').innerHTML =
+    eng + `<div class="confirm-row" style="font-weight:700;"><span class="key">Total</span><span class="val">${sumarCampos(POZAS)}</span></div>`;
+
+  const rec = JAULAS.map(id => {
+    const v = document.getElementById(id)?.value;
+    const lbl = id.replace('_', ' ').replace('jaula', 'Jaula');
+    return `<div class="confirm-row"><span class="key">${lbl}</span><span class="val">${v || '0'}</span></div>`;
+  }).join('');
+  document.getElementById('resumen-recria-rows').innerHTML =
+    rec + `<div class="confirm-row" style="font-weight:700;"><span class="key">Total</span><span class="val">${sumarCampos(JAULAS)}</span></div>`;
+
+  const restoKeys = [
+    ['marranas_total','Total Marranas'],
+    ['marranas_con_lechones','Mar. c/Lechones'],
+    ['lechones_maternidad','Lechones Maternidad'],
+    ['marranas_sin_clasificar','Sin clasificar'],
+    ['total_verracos','Total Verracos'],
+    ['futuras_madres_granja','Fut. Madres Granja'],
+    ['futuras_madres_huaral','Fut. Madres Huaral'],
+    ['enfermeria','Enfermería'],
+  ];
+  document.getElementById('resumen-resto-rows').innerHTML = restoKeys.map(([id, lbl]) =>
+    `<div class="confirm-row"><span class="key">${lbl}</span><span class="val">${document.getElementById(id)?.value || '—'}</span></div>`
+  ).join('');
+
+  const notas = document.getElementById('notas')?.value.trim();
+  if (notas) {
+    document.getElementById('resumen-notas').style.display = 'block';
+    document.getElementById('resumen-notas-texto').textContent = notas;
+  }
+
+  nav.siguiente();
+}
+
+// Enviar al Apps Script
+async function enviar() {
+  const btnEnviar = document.getElementById('btn-enviar');
+  const spinner   = document.getElementById('spinner');
+  btnEnviar.disabled = true;
+  spinner.style.display = 'block';
+
+  const get = id => parseInt(document.getElementById(id)?.value) || 0;
+  const getStr = id => document.getElementById(id)?.value?.trim() || '';
+
+  const datos = {
+    poza_1: get('poza_1'), poza_2: get('poza_2'), poza_3: get('poza_3'),
+    poza_4: get('poza_4'), poza_5: get('poza_5'), poza_6: get('poza_6'),
+    poza_11: get('poza_11'), poza_12: get('poza_12'), piso_plastico: get('piso_plastico'),
+    engordes_total: sumarCampos(POZAS),
+    jaula_1: get('jaula_1'), jaula_2: get('jaula_2'), jaula_3: get('jaula_3'),
+    jaula_4: get('jaula_4'), jaula_5: get('jaula_5'), jaula_6: get('jaula_6'),
+    jaula_7: get('jaula_7'), jaula_8: get('jaula_8'),
+    recria_total: sumarCampos(JAULAS),
+    marranas_total: get('marranas_total'),
+    marranas_con_lechones: get('marranas_con_lechones'),
+    lechones_maternidad: get('lechones_maternidad'),
+    marranas_sin_clasificar: get('marranas_sin_clasificar'),
+    total_verracos: get('total_verracos'),
+    futuras_madres_granja: get('futuras_madres_granja'),
+    futuras_madres_huaral: get('futuras_madres_huaral'),
+    enfermeria: get('enfermeria'),
+    notas: getStr('notas'),
+  };
+
+  try {
+    await enviarDatos('control_semanal', datos);
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('msg-fecha-ok').textContent = 'Fecha: ' + fechaHoy();
+    mostrarExito('form-body', 'msg-exito');
+  } catch (e) {
+    spinner.style.display = 'none';
+    btnEnviar.disabled = false;
+    mostrarError('msg-error', e.message);
+  }
+}
+</script>
+</body>
+</html>
