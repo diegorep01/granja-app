@@ -35,9 +35,13 @@
       </div>
 
       <div class="field-group" style="margin-top:8px;">
+        <div class="field-row">
+          <label>Cantidad de bajas</label>
+          <input type="number" id="cantidad" min="1" max="50" placeholder="1" value="1">
+        </div>
         <div class="field-row field-wide">
-          <label>Identificación (opcional)</label>
-          <input type="text" id="animal_id" style="width:100%;text-align:left;" placeholder="Ej: Poza 4 / Jaula 2 / Ma-008">
+          <label>Jaula / Poza (opcional)</label>
+          <input type="text" id="animal_id" style="width:100%;text-align:left;" placeholder="Ej: Jaula 2 / Poza 4 / Ma-008">
         </div>
       </div>
 
@@ -67,9 +71,24 @@
           <label>Peso estimado (kg)</label>
           <input type="number" id="peso_estimado" min="0" max="300" step="0.5" placeholder="—">
         </div>
+        <div class="field-row">
+          <label>Fecha del evento</label>
+          <input type="date" id="fecha_evento" style="width:100%;">
+        </div>
+      </div>
+
+      <p style="font-size:.88rem;color:#555;margin:8px 16px 4px;">¿Cuándo ocurrió?</p>
+      <div class="opciones-grid" id="turno-grid">
+        <button class="opcion-btn" data-val="Día" onclick="seleccionarTurno(this)">🌅 Día</button>
+        <button class="opcion-btn" data-val="Noche" onclick="seleccionarTurno(this)">🌙 Noche</button>
+        <button class="opcion-btn" data-val="Hora específica" onclick="seleccionarTurno(this)">🕐 Hora</button>
+      </div>
+      <div id="hora-campo" style="display:none; padding:0 16px 8px;">
+        <input type="time" id="hora_especifica" style="width:100%; padding:10px; font-size:1rem; border:1px solid #ddd; border-radius:8px;">
       </div>
 
       <input type="hidden" id="causa">
+      <input type="hidden" id="turno">
       <div class="nav-btns">
         <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
         <button class="btn btn-rojo" onclick="irAConfirmar()">Revisar →</button>
@@ -81,11 +100,13 @@
       <div class="step-title">✅ Confirmar Baja</div>
       <div class="confirm-box">
         <div class="confirm-row"><span class="key">Categoría</span><span class="val" id="r-cat"></span></div>
-        <div class="confirm-row"><span class="key">Identificación</span><span class="val" id="r-id"></span></div>
+        <div class="confirm-row"><span class="key">Cantidad</span><span class="val" id="r-cantidad" style="font-weight:bold;"></span></div>
+        <div class="confirm-row"><span class="key">Jaula / Poza</span><span class="val" id="r-id"></span></div>
         <div class="confirm-row"><span class="key">Causa</span><span class="val" id="r-causa"></span></div>
         <div class="confirm-row"><span class="key">Detalle</span><span class="val" id="r-detalle"></span></div>
         <div class="confirm-row"><span class="key">Peso estimado</span><span class="val" id="r-peso"></span></div>
         <div class="confirm-row"><span class="key">Fecha</span><span class="val" id="r-fecha"></span></div>
+        <div class="confirm-row"><span class="key">Momento</span><span class="val" id="r-turno"></span></div>
       </div>
       <div class="nav-btns">
         <button class="btn btn-secundario" onclick="nav.anterior()">← Corregir</button>
@@ -112,6 +133,9 @@
 document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
 const nav = initPasos(3);
 
+// Fecha por defecto: hoy
+document.getElementById('fecha_evento').value = new Date().toISOString().split('T')[0];
+
 function seleccionarCategoria(btn) {
   document.querySelectorAll('#categoria-grid .opcion-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
@@ -122,6 +146,13 @@ function seleccionarCausa(btn) {
   btn.closest('.opciones-grid').querySelectorAll('.opcion-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   document.getElementById('causa').value = btn.dataset.val;
+}
+
+function seleccionarTurno(btn) {
+  document.querySelectorAll('#turno-grid .opcion-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('turno').value = btn.dataset.val;
+  document.getElementById('hora-campo').style.display = btn.dataset.val === 'Hora específica' ? 'block' : 'none';
 }
 
 function pasoCausa() {
@@ -137,13 +168,19 @@ function irAConfirmar() {
     alert('Por favor selecciona una causa.');
     return;
   }
-  document.getElementById('r-cat').textContent    = document.getElementById('categoria').value;
-  document.getElementById('r-id').textContent     = document.getElementById('animal_id')?.value || '—';
-  document.getElementById('r-causa').textContent  = document.getElementById('causa').value;
-  document.getElementById('r-detalle').textContent= document.getElementById('detalle_causa')?.value || '—';
+  const turno = document.getElementById('turno').value;
+  const hora  = document.getElementById('hora_especifica')?.value;
+  const momentoTexto = turno === 'Hora específica' && hora ? hora : (turno || '—');
+
+  document.getElementById('r-cat').textContent      = document.getElementById('categoria').value;
+  document.getElementById('r-cantidad').textContent = document.getElementById('cantidad')?.value || '1';
+  document.getElementById('r-id').textContent       = document.getElementById('animal_id')?.value || '—';
+  document.getElementById('r-causa').textContent    = document.getElementById('causa').value;
+  document.getElementById('r-detalle').textContent  = document.getElementById('detalle_causa')?.value || '—';
   const peso = document.getElementById('peso_estimado')?.value;
-  document.getElementById('r-peso').textContent   = peso ? peso + ' kg' : '—';
-  document.getElementById('r-fecha').textContent  = fechaHoy();
+  document.getElementById('r-peso').textContent     = peso ? peso + ' kg' : '—';
+  document.getElementById('r-fecha').textContent    = document.getElementById('fecha_evento')?.value || fechaHoy();
+  document.getElementById('r-turno').textContent    = momentoTexto;
   nav.siguiente();
 }
 
@@ -151,13 +188,18 @@ async function enviar() {
   const btn = document.getElementById('btn-enviar');
   btn.disabled = true;
   document.getElementById('spinner').style.display = 'block';
+  const turno = document.getElementById('turno').value;
+  const hora  = document.getElementById('hora_especifica')?.value;
   try {
     await enviarDatos('muerte', {
       categoria:     document.getElementById('categoria').value,
+      cantidad:      parseInt(document.getElementById('cantidad')?.value) || 1,
       animal_id:     document.getElementById('animal_id')?.value?.trim(),
       causa:         document.getElementById('causa').value,
       detalle_causa: document.getElementById('detalle_causa')?.value?.trim(),
       peso_estimado: parseFloat(document.getElementById('peso_estimado')?.value) || null,
+      fecha_evento:  document.getElementById('fecha_evento')?.value,
+      turno:         turno === 'Hora específica' && hora ? hora : turno,
     });
     mostrarExito('form-body', 'msg-exito');
   } catch(e) {

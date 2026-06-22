@@ -6,6 +6,145 @@
 <meta name="theme-color" content="#f39c12">
 <title>Venta – Granja Tarapoto</title>
 <link rel="stylesheet" href="style.css">
+<style>
+.loc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 0 16px;
+  margin-bottom: 12px;
+}
+.loc-btn {
+  padding: 10px 4px;
+  font-size: .82rem;
+  border: 2px solid #ddd;
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+  color: #333;
+}
+.loc-btn.selected {
+  background: #fff3e0;
+  border-color: #f39c12;
+  color: #c0620a;
+  font-weight: 700;
+}
+.seccion-label {
+  font-size: .75rem;
+  color: #999;
+  padding: 0 16px 4px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-top: 4px;
+}
+.seleccionados-lista { padding: 0 16px; margin-top: 8px; }
+.sel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff8f0;
+  border: 1px solid #f5c06a;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+}
+.sel-row label { font-size: .9rem; font-weight: 600; color: #7a4400; }
+.sel-row input {
+  width: 58px;
+  padding: 6px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+/* ── Bloques de lote (paso 2) ── */
+.lote-bloque {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  margin: 0 16px 16px;
+  overflow: hidden;
+}
+.lote-header {
+  background: #e67e22;
+  color: #fff;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: .95rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lote-precios {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fff8f0;
+  border-bottom: 1px solid #eee;
+  align-items: flex-end;
+}
+.lote-precios .campo { flex: 1; }
+.lote-precios label { font-size: .75rem; color: #888; display: block; margin-bottom: 3px; }
+.lote-precios input {
+  width: 100%;
+  padding: 7px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: .95rem;
+  text-align: center;
+}
+.copiar-btn {
+  padding: 7px 10px;
+  font-size: .72rem;
+  background: #fff3e0;
+  border: 1px solid #f39c12;
+  border-radius: 6px;
+  color: #c0620a;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.3;
+  align-self: flex-end;
+}
+.animal-fila {
+  display: flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-bottom: 1px solid #f5f5f5;
+  gap: 8px;
+}
+.animal-num { font-size: .8rem; color: #bbb; min-width: 22px; }
+.animal-fila input {
+  flex: 1;
+  padding: 7px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: .95rem;
+  text-align: center;
+}
+.animal-precio { font-size: .85rem; color: #388e3c; min-width: 76px; text-align: right; font-weight: 600; }
+.lote-subtotal {
+  padding: 10px 14px;
+  text-align: right;
+  font-size: .88rem;
+  background: #f9f9f9;
+  color: #555;
+}
+.lote-subtotal strong { font-size: .95rem; color: #1b5e20; }
+/* ── Total general (paso 2) ── */
+.caja-total {
+  margin: 0 16px 16px;
+  background: #1b5e20;
+  color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.caja-total .ct-label  { font-size: .82rem; opacity: .75; }
+.caja-total .ct-monto  { font-size: 2rem; font-weight: 700; }
+.caja-total .ct-detalle{ font-size: .78rem; opacity: .7; margin-top: 4px; }
+</style>
 </head>
 <body>
 
@@ -22,103 +161,124 @@
 
   <div id="form-body">
 
-    <!-- PASO 1: Cantidad y Peso -->
+    <!-- ══ PASO 1: Selección de orígenes ══ -->
     <div class="step active" id="paso-1">
-      <div class="step-title">¿Qué se vendió?</div>
+      <div class="step-title">¿De dónde salen?</div>
+      <p style="font-size:.85rem;color:#666;padding:0 16px 10px;">Toca para seleccionar los orígenes:</p>
 
-      <p style="font-size:.88rem;color:#555;margin-bottom:12px;">Categoría:</p>
-      <div class="opciones-grid" id="tipo-grid">
-        <button class="opcion-btn" data-val="Engorde" onclick="selTipo(this)">🐷 Engorde</button>
-        <button class="opcion-btn" data-val="Marrana descarte" onclick="selTipo(this)">🐄 Marrana</button>
-        <button class="opcion-btn" data-val="Lechón recría" onclick="selTipo(this)">🐽 Lechón</button>
-        <button class="opcion-btn" data-val="Verraco" onclick="selTipo(this)">🐗 Verraco</button>
+      <p class="seccion-label">Pozas de engorde</p>
+      <div class="loc-grid">
+        <button class="loc-btn" data-id="poza1"  data-nombre="Poza 1"       onclick="toggleLoc(this)">Poza 1</button>
+        <button class="loc-btn" data-id="poza2"  data-nombre="Poza 2"       onclick="toggleLoc(this)">Poza 2</button>
+        <button class="loc-btn" data-id="poza3"  data-nombre="Poza 3"       onclick="toggleLoc(this)">Poza 3</button>
+        <button class="loc-btn" data-id="poza4"  data-nombre="Poza 4"       onclick="toggleLoc(this)">Poza 4</button>
+        <button class="loc-btn" data-id="poza5"  data-nombre="Poza 5"       onclick="toggleLoc(this)">Poza 5</button>
+        <button class="loc-btn" data-id="poza6"  data-nombre="Poza 6"       onclick="toggleLoc(this)">Poza 6</button>
+        <button class="loc-btn" data-id="poza11" data-nombre="Poza 11"      onclick="toggleLoc(this)">Poza 11</button>
+        <button class="loc-btn" data-id="poza12" data-nombre="Poza 12"      onclick="toggleLoc(this)">Poza 12</button>
+        <button class="loc-btn" data-id="piso"   data-nombre="Piso Plástico" onclick="toggleLoc(this)">Piso 🟦</button>
       </div>
-      <input type="hidden" id="tipo_venta">
 
-      <div class="field-group" style="margin-top:8px;">
-        <div class="field-row">
-          <label>Cantidad de animales</label>
-          <input type="number" id="cantidad" min="1" max="200" placeholder="1" oninput="recalcular()">
-        </div>
-        <div class="field-row field-wide">
-          <label>Procedencia <span class="tag">opcional</span></label>
-          <input type="text" id="procedencia" style="width:100%;text-align:left;" placeholder="Ej: Poza 5, Jaula 2...">
-        </div>
+      <p class="seccion-label">Jaulas de recría</p>
+      <div class="loc-grid">
+        <button class="loc-btn" data-id="jaula1" data-nombre="Jaula 1" onclick="toggleLoc(this)">Jaula 1</button>
+        <button class="loc-btn" data-id="jaula2" data-nombre="Jaula 2" onclick="toggleLoc(this)">Jaula 2</button>
+        <button class="loc-btn" data-id="jaula3" data-nombre="Jaula 3" onclick="toggleLoc(this)">Jaula 3</button>
+        <button class="loc-btn" data-id="jaula4" data-nombre="Jaula 4" onclick="toggleLoc(this)">Jaula 4</button>
+        <button class="loc-btn" data-id="jaula5" data-nombre="Jaula 5" onclick="toggleLoc(this)">Jaula 5</button>
+        <button class="loc-btn" data-id="jaula6" data-nombre="Jaula 6" onclick="toggleLoc(this)">Jaula 6</button>
+        <button class="loc-btn" data-id="jaula7" data-nombre="Jaula 7" onclick="toggleLoc(this)">Jaula 7</button>
+        <button class="loc-btn" data-id="jaula8" data-nombre="Jaula 8" onclick="toggleLoc(this)">Jaula 8</button>
       </div>
+
+      <div class="seleccionados-lista" id="seleccionados-lista"></div>
 
       <div class="nav-btns">
-        <button class="btn" style="background:#f39c12;color:#fff;" onclick="pasoPrecio()">Siguiente →</button>
+        <button class="btn" style="background:#f39c12;color:#fff;" onclick="irAPesos()">Siguiente →</button>
       </div>
     </div>
 
-    <!-- PASO 2: Precio y Peso -->
+    <!-- ══ PASO 2: Pesos individuales por animal ══ -->
     <div class="step" id="paso-2">
-      <div class="step-title">Peso y Precio</div>
+      <div class="step-title">Pesos por animal</div>
+      <p style="font-size:.83rem;color:#666;padding:0 16px 12px;">
+        Ingresa el peso bruto de cada animal. Merma y precio son por origen — usa 📋 para copiarlos a todos.
+      </p>
+      <div id="lotes-container"></div>
+      <div class="caja-total" id="caja-total" style="display:none;">
+        <div class="ct-label">TOTAL VENTA</div>
+        <div class="ct-monto" id="ct-monto">S/ 0.00</div>
+        <div class="ct-detalle" id="ct-detalle"></div>
+      </div>
+      <div class="nav-btns" style="padding:0 16px 16px;">
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
+        <button class="btn" style="background:#f39c12;color:#fff;" onclick="irAComprador()">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- ══ PASO 3: Comprador y pago ══ -->
+    <div class="step" id="paso-3">
+      <div class="step-title">Comprador y Pago</div>
 
       <div class="field-group">
-        <div class="field-row">
-          <label>Peso bruto total (kg)</label>
-          <input type="number" id="peso_bruto" min="0" step="0.5" placeholder="0" oninput="recalcular()">
-        </div>
-        <div class="field-row">
-          <label>% de merma por grasa</label>
-          <input type="number" id="merma_pct" min="0" max="50" step="0.5" value="0" placeholder="0" oninput="recalcular()">
-        </div>
-        <div class="field-row">
-          <label>Precio por kg (S/)</label>
-          <input type="number" id="precio_kg" min="0" step="0.5" placeholder="0.00" oninput="recalcular()">
+        <div class="field-row field-wide">
+          <label>Nombre del comprador</label>
+          <input type="text" id="comprador" style="width:100%;text-align:left;"
+            placeholder="Ej: Juan Huanca / Mercado Central">
         </div>
       </div>
 
-      <!-- Resultado en tiempo real -->
-      <div class="resultado-venta" id="resultado-venta" style="display:none;">
-        <div style="font-size:.85rem;color:#388e3c;margin-bottom:4px;">Peso neto estimado: <strong id="v-peso-neto">—</strong></div>
-        <div class="monto" id="v-total">S/ 0.00</div>
-        <div class="detalle" id="v-detalle"></div>
+      <p style="font-size:.88rem;color:#555;margin:4px 16px 6px;">¿Cómo se transporta?</p>
+      <div class="opciones-grid" id="transporte-grid" style="grid-template-columns:1fr 1fr;">
+        <button class="opcion-btn" data-val="Trajo vehículo"
+          onclick="selOpc('transporte',this,'transporte-grid');toggleCostoTransporte(false)">🚛 Trajo vehículo</button>
+        <button class="opcion-btn" data-val="Nos encargamos"
+          onclick="selOpc('transporte',this,'transporte-grid');toggleCostoTransporte(true)">🏠 Nos encargamos</button>
+      </div>
+      <input type="hidden" id="transporte">
+      <div id="costo-transporte-campo" style="display:none;padding:8px 16px 0;">
+        <div class="field-row">
+          <label>Precio del transporte (S/)</label>
+          <input type="number" id="costo_transporte" min="0" step="1" placeholder="0">
+        </div>
       </div>
 
-      <div class="nav-btns">
-        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
-        <button class="btn" style="background:#f39c12;color:#fff;" onclick="irAConfirmar()">Revisar →</button>
+      <p style="font-size:.88rem;color:#555;margin:12px 16px 6px;">¿Cómo se cobra?</p>
+      <div class="opciones-grid" id="pago-grid" style="grid-template-columns:repeat(3,1fr);">
+        <button class="opcion-btn" data-val="Al contado"
+          onclick="selOpc('pago',this,'pago-grid')">💵 Contado</button>
+        <button class="opcion-btn" data-val="Crédito"
+          onclick="selOpc('pago',this,'pago-grid')">📋 Crédito</button>
+        <button class="opcion-btn" data-val="Pendiente"
+          onclick="selOpc('pago',this,'pago-grid')">⏳ Pendiente</button>
       </div>
-    </div>
+      <input type="hidden" id="pago">
 
-    <!-- PASO 3: Confirmación -->
-    <div class="step" id="paso-3">
-      <div class="step-title">✅ Confirmar Venta</div>
-      <div class="confirm-box">
-        <div class="confirm-row"><span class="key">Categoría</span><span class="val" id="r-tipo"></span></div>
-        <div class="confirm-row"><span class="key">Cantidad</span><span class="val" id="r-cant"></span></div>
-        <div class="confirm-row"><span class="key">Procedencia</span><span class="val" id="r-proc"></span></div>
-        <div class="confirm-row"><span class="key">Peso bruto</span><span class="val" id="r-bruto"></span></div>
-        <div class="confirm-row"><span class="key">Merma</span><span class="val" id="r-merma"></span></div>
-        <div class="confirm-row"><span class="key">Peso neto</span><span class="val" id="r-neto"></span></div>
-        <div class="confirm-row"><span class="key">Precio / kg</span><span class="val" id="r-precio"></span></div>
+      <div class="confirm-box" style="margin-top:16px;">
+        <div class="confirm-row"><span class="key">Total animales</span><span class="val" id="rf-animales"></span></div>
+        <div class="confirm-row"><span class="key">Kg bruto total</span><span class="val" id="rf-bruto"></span></div>
+        <div class="confirm-row"><span class="key">Kg neto total</span><span class="val" id="rf-neto"></span></div>
         <div class="confirm-row" style="border-top:2px solid #ddd;padding-top:8px;">
           <span class="key" style="font-size:1rem;font-weight:700;">TOTAL A COBRAR</span>
-          <span class="val" style="font-size:1.2rem;color:#1b5e20;" id="r-total"></span>
+          <span class="val" style="font-size:1.2rem;color:#1b5e20;" id="rf-total"></span>
         </div>
-        <div class="confirm-row"><span class="key">Fecha</span><span class="val" id="r-fecha"></span></div>
       </div>
 
-      <div class="field-group">
+      <div class="field-group" style="margin-top:8px;">
         <div class="field-row field-wide">
-          <label>Comprador / Destino <span class="tag">opcional</span></label>
-          <input type="text" id="comprador" style="width:100%;text-align:left;" placeholder="Ej: Mercado Tarapoto">
-        </div>
-        <div class="field-row field-wide">
-          <label>Notas <span class="tag">opcional</span></label>
+          <label>Notas (opcional)</label>
           <textarea id="notas" rows="2" placeholder="Observaciones adicionales..."></textarea>
         </div>
       </div>
 
       <div class="nav-btns">
-        <button class="btn btn-secundario" onclick="nav.anterior()">← Corregir</button>
+        <button class="btn btn-secundario" onclick="nav.anterior()">← Atrás</button>
         <button class="btn btn-verde" id="btn-enviar" onclick="enviar()">Registrar ✓</button>
       </div>
       <div class="spinner" id="spinner">Enviando...</div>
       <div class="msg-error" id="msg-error"><p></p>
-        <button class="btn btn-primario" style="margin-top:12px" onclick="this.parentElement.style.display='none'">Reintentar</button>
+        <button class="btn btn-primario" style="margin-top:12px"
+          onclick="this.parentElement.style.display='none'">Reintentar</button>
       </div>
     </div>
 
@@ -128,70 +288,212 @@
     <div class="icono-msg">💰</div>
     <p>¡Venta registrada!</p>
     <p style="font-size:.85rem;color:#388e3c;margin-top:8px;" id="msg-total-ok"></p>
-    <button class="btn btn-verde" style="margin-top:20px" onclick="window.location='index.html'">Volver al menú</button>
+    <button class="btn btn-verde" style="margin-top:20px"
+      onclick="window.location='index.html'">Volver al menú</button>
   </div>
 
-</div>
+</div><!-- /container -->
 
 <script src="app.js"></script>
 <script>
 document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
 const nav = initPasos(3);
 
-function selTipo(btn) {
-  document.querySelectorAll('#tipo-grid .opcion-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  document.getElementById('tipo_venta').value = btn.dataset.val;
-}
+// { id: { nombre, cantidad } }
+const seleccionados = {};
 
-function recalcular() {
-  const kg     = parseFloat(document.getElementById('peso_bruto')?.value)  || 0;
-  const merma  = parseFloat(document.getElementById('merma_pct')?.value)   || 0;
-  const precio = parseFloat(document.getElementById('precio_kg')?.value)    || 0;
-  const neto   = kg * (1 - merma / 100);
-  const total  = neto * precio;
-  const elRes  = document.getElementById('resultado-venta');
-  if (kg > 0 && precio > 0) {
-    document.getElementById('v-peso-neto').textContent = neto.toFixed(1) + ' kg';
-    document.getElementById('v-total').textContent     = 'S/ ' + total.toFixed(2);
-    document.getElementById('v-detalle').textContent   = `${kg} kg − ${merma}% merma × S/${precio}/kg`;
-    elRes.style.display = 'block';
+/* ── Paso 1: selección de orígenes ── */
+
+function toggleLoc(btn) {
+  const { id, nombre } = btn.dataset;
+  if (btn.classList.contains('selected')) {
+    btn.classList.remove('selected');
+    delete seleccionados[id];
   } else {
-    elRes.style.display = 'none';
+    btn.classList.add('selected');
+    seleccionados[id] = { nombre, cantidad: 1 };
   }
+  renderSeleccionados();
 }
 
-function pasoPrecio() {
-  if (!document.getElementById('tipo_venta').value) {
-    alert('Por favor selecciona una categoría.');
+function renderSeleccionados() {
+  const lista = document.getElementById('seleccionados-lista');
+  const ids = Object.keys(seleccionados);
+  if (!ids.length) { lista.innerHTML = ''; return; }
+  lista.innerHTML =
+    `<p style="font-size:.82rem;color:#888;margin-bottom:6px;">¿Cuántos animales de cada origen?</p>` +
+    ids.map(id => `
+      <div class="sel-row">
+        <label>📍 ${seleccionados[id].nombre}</label>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:.8rem;color:#aaa;">animales:</span>
+          <input type="number" min="1" max="60" value="${seleccionados[id].cantidad}"
+            oninput="seleccionados['${id}'].cantidad = Math.max(1, parseInt(this.value)||1)">
+        </div>
+      </div>`).join('');
+}
+
+function irAPesos() {
+  if (!Object.keys(seleccionados).length) {
+    alert('Selecciona al menos un origen.');
     return;
   }
+  // Sincronizar cantidades desde los inputs del DOM antes de generar
+  Object.keys(seleccionados).forEach(id => {
+    const el = document.querySelector(
+      `.sel-row input[oninput*="seleccionados['${id}']"]`
+    );
+    if (el) seleccionados[id].cantidad = Math.max(1, parseInt(el.value) || 1);
+  });
+  generarBloquesPesos();
   nav.siguiente();
 }
 
-function pesoNeto() {
-  const kg    = parseFloat(document.getElementById('peso_bruto')?.value) || 0;
-  const merma = parseFloat(document.getElementById('merma_pct')?.value)  || 0;
-  return kg * (1 - merma / 100);
-}
-function totalVenta() {
-  return pesoNeto() * (parseFloat(document.getElementById('precio_kg')?.value) || 0);
+/* ── Paso 2: bloques de pesos por lote ── */
+
+function generarBloquesPesos() {
+  const cont = document.getElementById('lotes-container');
+  cont.innerHTML = '';
+  Object.entries(seleccionados).forEach(([id, lote]) => {
+    const n = lote.cantidad;
+    const filas = Array.from({ length: n }, (_, i) => `
+      <div class="animal-fila">
+        <span class="animal-num">${i + 1}</span>
+        <input type="number" min="0" step="0.5" placeholder="kg"
+          id="peso_${id}_${i}" oninput="recalcularLote('${id}')">
+        <span class="animal-precio" id="prec_${id}_${i}">—</span>
+      </div>`).join('');
+
+    cont.insertAdjacentHTML('beforeend', `
+      <div class="lote-bloque" id="bloque_${id}">
+        <div class="lote-header">
+          <span>📍 ${lote.nombre}</span>
+          <span style="font-size:.8rem;opacity:.85;">${n} animal${n > 1 ? 'es' : ''}</span>
+        </div>
+        <div class="lote-precios">
+          <div class="campo">
+            <label>% Merma</label>
+            <input type="number" min="0" max="30" step="0.5" placeholder="0"
+              id="merma_${id}" oninput="recalcularLote('${id}')">
+          </div>
+          <div class="campo">
+            <label>S/ por kg</label>
+            <input type="number" min="0" step="0.5" placeholder="0.00"
+              id="precio_${id}" oninput="recalcularLote('${id}')">
+          </div>
+          <button class="copiar-btn" onclick="copiarATodos('${id}')">📋 Copiar<br>a todos</button>
+        </div>
+        ${filas}
+        <div class="lote-subtotal" id="sub_${id}">
+          Subtotal: <strong>—</strong>
+        </div>
+      </div>`);
+  });
 }
 
-function irAConfirmar() {
-  const kg    = parseFloat(document.getElementById('peso_bruto')?.value) || 0;
-  const merma = parseFloat(document.getElementById('merma_pct')?.value)  || 0;
-  const prec  = parseFloat(document.getElementById('precio_kg')?.value)  || 0;
+function recalcularLote(id) {
+  const merma  = parseFloat(document.getElementById(`merma_${id}`)?.value)  || 0;
+  const precio = parseFloat(document.getElementById(`precio_${id}`)?.value) || 0;
+  let subtotal = 0;
+  const n = seleccionados[id].cantidad;
+  for (let i = 0; i < n; i++) {
+    const kg   = parseFloat(document.getElementById(`peso_${id}_${i}`)?.value) || 0;
+    const neto = kg * (1 - merma / 100);
+    const val  = neto * precio;
+    subtotal  += val;
+    const el   = document.getElementById(`prec_${id}_${i}`);
+    if (el) el.textContent = (kg && precio) ? 'S/ ' + val.toFixed(2) : '—';
+  }
+  const elSub = document.getElementById(`sub_${id}`);
+  if (elSub) elSub.innerHTML = `Subtotal: <strong>S/ ${subtotal.toFixed(2)}</strong>`;
+  recalcularTotal();
+}
 
-  document.getElementById('r-tipo').textContent   = document.getElementById('tipo_venta').value || '—';
-  document.getElementById('r-cant').textContent   = document.getElementById('cantidad')?.value || '—';
-  document.getElementById('r-proc').textContent   = document.getElementById('procedencia')?.value || '—';
-  document.getElementById('r-bruto').textContent  = kg ? kg + ' kg' : '—';
-  document.getElementById('r-merma').textContent  = merma + '%';
-  document.getElementById('r-neto').textContent   = pesoNeto().toFixed(1) + ' kg';
-  document.getElementById('r-precio').textContent = prec ? 'S/ ' + prec : '—';
-  document.getElementById('r-total').textContent  = 'S/ ' + totalVenta().toFixed(2);
-  document.getElementById('r-fecha').textContent  = fechaHoy();
+function copiarATodos(origenId) {
+  const merma  = document.getElementById(`merma_${origenId}`)?.value;
+  const precio = document.getElementById(`precio_${origenId}`)?.value;
+  Object.keys(seleccionados).forEach(id => {
+    if (id === origenId) return;
+    const em = document.getElementById(`merma_${id}`);
+    const ep = document.getElementById(`precio_${id}`);
+    if (em) em.value = merma ?? '';
+    if (ep) ep.value = precio ?? '';
+    recalcularLote(id);
+  });
+}
+
+function recalcularTotal() {
+  let totalSoles = 0, totalBruto = 0, totalNeto = 0, totalAnimales = 0;
+  Object.entries(seleccionados).forEach(([id, lote]) => {
+    const merma  = parseFloat(document.getElementById(`merma_${id}`)?.value)  || 0;
+    const precio = parseFloat(document.getElementById(`precio_${id}`)?.value) || 0;
+    totalAnimales += lote.cantidad;
+    for (let i = 0; i < lote.cantidad; i++) {
+      const kg   = parseFloat(document.getElementById(`peso_${id}_${i}`)?.value) || 0;
+      const neto = kg * (1 - merma / 100);
+      totalBruto += kg;
+      totalNeto  += neto;
+      totalSoles += neto * precio;
+    }
+  });
+  document.getElementById('ct-monto').textContent   = 'S/ ' + totalSoles.toFixed(2);
+  document.getElementById('ct-detalle').textContent =
+    `${totalAnimales} animales · ${totalBruto.toFixed(1)} kg bruto · ${totalNeto.toFixed(1)} kg neto`;
+  const caja = document.getElementById('caja-total');
+  if (caja) caja.style.display = totalSoles > 0 ? 'block' : 'none';
+}
+
+/* ── Paso 3: comprador y pago ── */
+
+function toggleCostoTransporte(mostrar) {
+  document.getElementById('costo-transporte-campo').style.display = mostrar ? 'block' : 'none';
+}
+
+function selOpc(campo, btn, gridId) {
+  document.querySelectorAll(`#${gridId} .opcion-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById(campo).value = btn.dataset.val;
+}
+
+function getLotesData() {
+  return Object.entries(seleccionados).map(([id, lote]) => {
+    const merma  = parseFloat(document.getElementById(`merma_${id}`)?.value)  || 0;
+    const precio = parseFloat(document.getElementById(`precio_${id}`)?.value) || 0;
+    const animales = [];
+    let bruto = 0, subtotal = 0;
+    for (let i = 0; i < lote.cantidad; i++) {
+      const kg   = parseFloat(document.getElementById(`peso_${id}_${i}`)?.value) || 0;
+      const neto = parseFloat((kg * (1 - merma / 100)).toFixed(2));
+      const val  = parseFloat((neto * precio).toFixed(2));
+      bruto    += kg;
+      subtotal += val;
+      animales.push({ n: i + 1, peso_bruto_kg: kg, peso_neto_kg: neto, subtotal_soles: val });
+    }
+    return {
+      origen:        lote.nombre,
+      cantidad:      lote.cantidad,
+      merma_pct:     merma,
+      precio_kg:     precio,
+      animales,
+      kg_bruto_lote: parseFloat(bruto.toFixed(2)),
+      subtotal_soles: parseFloat(subtotal.toFixed(2)),
+    };
+  });
+}
+
+function irAComprador() {
+  const lotes = getLotesData();
+  let totalSoles = 0, totalBruto = 0, totalNeto = 0, totalAnimales = 0;
+  lotes.forEach(l => {
+    totalSoles    += l.subtotal_soles;
+    totalBruto    += l.kg_bruto_lote;
+    totalAnimales += l.cantidad;
+    l.animales.forEach(a => { totalNeto += a.peso_neto_kg; });
+  });
+  document.getElementById('rf-animales').textContent = totalAnimales + ' animales';
+  document.getElementById('rf-bruto').textContent    = totalBruto.toFixed(1) + ' kg';
+  document.getElementById('rf-neto').textContent     = totalNeto.toFixed(1) + ' kg';
+  document.getElementById('rf-total').textContent    = 'S/ ' + totalSoles.toFixed(2);
   nav.siguiente();
 }
 
@@ -199,24 +501,33 @@ async function enviar() {
   const btn = document.getElementById('btn-enviar');
   btn.disabled = true;
   document.getElementById('spinner').style.display = 'block';
-  const neto  = pesoNeto();
-  const total = totalVenta();
+
+  const lotes = getLotesData();
+  let totalSoles = 0, totalBruto = 0, totalNeto = 0, totalAnimales = 0;
+  lotes.forEach(l => {
+    totalSoles    += l.subtotal_soles;
+    totalBruto    += l.kg_bruto_lote;
+    totalAnimales += l.cantidad;
+    l.animales.forEach(a => { totalNeto += a.peso_neto_kg; });
+  });
+
   try {
     await enviarDatos('venta', {
-      tipo_venta:   document.getElementById('tipo_venta').value,
-      cantidad:     parseInt(document.getElementById('cantidad')?.value) || null,
-      procedencia:  document.getElementById('procedencia')?.value?.trim(),
-      peso_bruto_kg:parseFloat(document.getElementById('peso_bruto')?.value) || null,
-      merma_pct:    parseFloat(document.getElementById('merma_pct')?.value) || 0,
-      peso_neto_kg: parseFloat(neto.toFixed(2)),
-      precio_kg:    parseFloat(document.getElementById('precio_kg')?.value) || null,
-      total_soles:  parseFloat(total.toFixed(2)),
-      comprador:    document.getElementById('comprador')?.value?.trim(),
-      notas:        document.getElementById('notas')?.value?.trim(),
+      total_animales:  totalAnimales,
+      total_kg_bruto:  parseFloat(totalBruto.toFixed(2)),
+      total_kg_neto:   parseFloat(totalNeto.toFixed(2)),
+      total_soles:     parseFloat(totalSoles.toFixed(2)),
+      comprador:       document.getElementById('comprador')?.value?.trim(),
+      transporte:      document.getElementById('transporte').value,
+      pago:            document.getElementById('pago').value,
+      costo_transporte: parseFloat(document.getElementById('costo_transporte')?.value) || 0,
+      notas:           document.getElementById('notas')?.value?.trim(),
+      lotes_json:      JSON.stringify(lotes),
     });
-    document.getElementById('msg-total-ok').textContent = 'Total cobrado: S/ ' + total.toFixed(2);
+    document.getElementById('msg-total-ok').textContent =
+      'S/ ' + totalSoles.toFixed(2) + ' · ' + totalAnimales + ' animales';
     mostrarExito('form-body', 'msg-exito');
-  } catch(e) {
+  } catch (e) {
     document.getElementById('spinner').style.display = 'none';
     btn.disabled = false;
     mostrarError('msg-error', e.message);

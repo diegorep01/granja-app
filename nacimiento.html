@@ -45,12 +45,16 @@
       <div class="step-title">Conteo de Lechones</div>
       <div class="field-group">
         <div class="field-row">
-          <label>Nacidos <strong>vivos</strong></label>
-          <input type="number" id="nacidos_vivos" min="0" max="30" placeholder="0">
+          <label>Nacidos <strong>en buen estado</strong></label>
+          <input type="number" id="nacidos_buen_estado" min="0" max="30" placeholder="0">
         </div>
         <div class="field-row">
           <label>Nacidos <strong>muertos</strong></label>
           <input type="number" id="nacidos_muertos" min="0" max="30" placeholder="0">
+        </div>
+        <div class="field-row">
+          <label>Nacidos <strong>momificados</strong></label>
+          <input type="number" id="nacidos_momificados" min="0" max="30" placeholder="0">
         </div>
       </div>
       <div class="field-group" style="padding:12px 16px; background:#f0fff4; margin-top:0;">
@@ -68,8 +72,10 @@
       <div class="confirm-box">
         <div class="confirm-row"><span class="key">Marrana</span><span class="val" id="r-marrana"></span></div>
         <div class="confirm-row"><span class="key">Nº de parto</span><span class="val" id="r-parto"></span></div>
-        <div class="confirm-row"><span class="key">Nacidos vivos</span><span class="val" id="r-vivos" style="color:#27ae60;"></span></div>
+        <div class="confirm-row"><span class="key">En buen estado</span><span class="val" id="r-buen-estado" style="color:#27ae60;"></span></div>
         <div class="confirm-row"><span class="key">Nacidos muertos</span><span class="val" id="r-muertos" style="color:#e74c3c;"></span></div>
+        <div class="confirm-row"><span class="key">Momificados</span><span class="val" id="r-momificados" style="color:#e67e22;"></span></div>
+        <div class="confirm-row" style="border-top:1px solid #ddd;padding-top:8px;margin-top:4px;"><span class="key"><strong>Total nacidos</strong></span><span class="val" id="r-total" style="font-weight:bold;"></span></div>
         <div class="confirm-row"><span class="key">Fecha</span><span class="val" id="r-fecha"></span></div>
       </div>
       <div class="field-group">
@@ -103,20 +109,25 @@
 document.getElementById('badge-fecha').textContent = '📅 ' + fechaHoy();
 const nav = initPasos(3);
 
-['nacidos_vivos','nacidos_muertos'].forEach(id => {
+function calcularTotal() {
+  return (parseInt(document.getElementById('nacidos_buen_estado')?.value)||0)
+       + (parseInt(document.getElementById('nacidos_muertos')?.value)||0)
+       + (parseInt(document.getElementById('nacidos_momificados')?.value)||0);
+}
+['nacidos_buen_estado','nacidos_muertos','nacidos_momificados'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', () => {
-    const v = (parseInt(document.getElementById('nacidos_vivos')?.value)||0)
-            + (parseInt(document.getElementById('nacidos_muertos')?.value)||0);
-    document.getElementById('total-nacidos').textContent = v;
+    document.getElementById('total-nacidos').textContent = calcularTotal();
   });
 });
 
 function irAConfirmar() {
-  document.getElementById('r-marrana').textContent = document.getElementById('marrana_id')?.value || '—';
-  document.getElementById('r-parto').textContent   = document.getElementById('num_parto')?.value || '—';
-  document.getElementById('r-vivos').textContent   = document.getElementById('nacidos_vivos')?.value || '0';
-  document.getElementById('r-muertos').textContent = document.getElementById('nacidos_muertos')?.value || '0';
-  document.getElementById('r-fecha').textContent   = fechaHoy();
+  document.getElementById('r-marrana').textContent    = document.getElementById('marrana_id')?.value || '—';
+  document.getElementById('r-parto').textContent      = document.getElementById('num_parto')?.value || '—';
+  document.getElementById('r-buen-estado').textContent = document.getElementById('nacidos_buen_estado')?.value || '0';
+  document.getElementById('r-muertos').textContent    = document.getElementById('nacidos_muertos')?.value || '0';
+  document.getElementById('r-momificados').textContent = document.getElementById('nacidos_momificados')?.value || '0';
+  document.getElementById('r-total').textContent      = calcularTotal();
+  document.getElementById('r-fecha').textContent      = fechaHoy();
   nav.siguiente();
 }
 
@@ -126,11 +137,13 @@ async function enviar() {
   document.getElementById('spinner').style.display = 'block';
   try {
     await enviarDatos('nacimiento', {
-      marrana_id:     document.getElementById('marrana_id')?.value?.trim(),
-      num_parto:      parseInt(document.getElementById('num_parto')?.value) || null,
-      nacidos_vivos:  parseInt(document.getElementById('nacidos_vivos')?.value) || 0,
-      nacidos_muertos:parseInt(document.getElementById('nacidos_muertos')?.value) || 0,
-      notas:          document.getElementById('notas')?.value?.trim(),
+      marrana_id:          document.getElementById('marrana_id')?.value?.trim(),
+      num_parto:           parseInt(document.getElementById('num_parto')?.value) || null,
+      nacidos_buen_estado: parseInt(document.getElementById('nacidos_buen_estado')?.value) || 0,
+      nacidos_muertos:     parseInt(document.getElementById('nacidos_muertos')?.value) || 0,
+      nacidos_momificados: parseInt(document.getElementById('nacidos_momificados')?.value) || 0,
+      nacidos_total:       calcularTotal(),
+      notas:               document.getElementById('notas')?.value?.trim(),
     });
     mostrarExito('form-body', 'msg-exito');
   } catch(e) {
